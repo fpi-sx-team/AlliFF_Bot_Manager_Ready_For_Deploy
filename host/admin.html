@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المسؤول - Purple Host</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --admin-purple: #8a2be2;
+            --admin-gold: #ffd700;
+            --admin-dark: #0a0a1a;
+            --admin-card: rgba(26, 10, 40, 0.95);
+            --text-light: #ffffff;
+            --text-muted: #b19cd9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--admin-dark) 0%, #1a0a28 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+        }
+        
+        .topbar {
+            background: rgba(138, 43, 226, 0.15);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--admin-gold);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--admin-gold), var(--admin-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(45deg, var(--admin-gold), #ffaa00);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 800;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .admin-card {
+            background: var(--admin-card);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--admin-gold), var(--admin-purple));
+        }
+        
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--admin-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            color: var(--text-light);
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--admin-purple);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, var(--admin-purple), var(--admin-gold));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.4);
+        }
+        
+        .users-list {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .user-item:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: var(--admin-gold);
+            margin-bottom: 5px;
+        }
+        
+        .user-details {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .delete-btn {
+            background: rgba(255, 85, 85, 0.2);
+            color: #ff5555;
+            border: 1px solid #ff5555;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(255, 85, 85, 0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--admin-gold);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .message {
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .success {
+            background: rgba(0, 255, 136, 0.15);
+            border: 2px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+        }
+        
+        .error {
+            background: rgba(255, 85, 85, 0.15);
+            border: 2px solid rgba(255, 85, 85, 0.4);
+            color: #ff5555;
+        }
+        
+        .loading {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 4px solid rgba(138, 43, 226, 0.3);
+            border-top: 4px solid var(--admin-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-bg"></div>
+    
+    <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button onclick="goToDashboard()" style="background: none; border: none; color: var(--admin-gold); font-size: 24px; cursor: pointer;">
+                <i class="fas fa-home"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                لوحة المسؤول
+            </div>
+            <div class="admin-badge">
+                <i class="fas fa-star"></i>
+                ADMIN PANEL
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 15px; color: var(--admin-gold);">
+            <span>مرحباً، <span id="adminUsername"></span></span>
+            <button onclick="logout()" style="background: none; border: 1px solid #ff5555; color: #ff5555; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+                تسجيل الخروج
+            </button>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="color: var(--admin-gold); margin-bottom: 10px; font-size: 36px;">
+                <i class="fas fa-crown"></i>
+                لوحة إدارة المستخدمين
+            </h1>
+            <p style="color: var(--text-muted);">أنشئ حسابات جديدة وأدر حسابات المستخدمين</p>
+        </div>
+        
+        <div class="dashboard-grid">
+            <div class="admin-card">
+                <div class="card-title">
+                    <i class="fas fa-user-plus"></i>
+                    إنشاء حساب جديد
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">👤 اسم المستخدم الجديد</label>
+                    <input type="text" id="newUsername" class="form-input" placeholder="أدخل اسم مستخدم فريد">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🔒 كلمة المرور</label>
+                    <input type="password" id="newPassword" class="form-input" placeholder="أدخل كلمة مرور قوية">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">🔐 تأكيد كلمة المرور</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="أعد إدخال كلمة المرور">
+                </div>
+                
+                <button class="btn" onclick="createNewUser()" id="createUserBtn">
+                    <span id="createUserText">✨ إنشاء حساب جديد</span>
+                    <div class="loading" id="createUserLoading"></div>
+                </button>
+                
+                <div id="createMessage" class="message"></div>
+            </div>
+            
+            <div class="admin-card">
+                <div class="card-title">
+                    <i class="fas fa-users"></i>
+                    المستخدمين الحاليين
+                    <span id="usersCount" style="font-size: 16px; background: rgba(255, 215, 0, 0.2); padding: 4px 12px; border-radius: 10px;">0</span>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalUsers">0</div>
+                        <div class="stat-label">المستخدمين</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div class="stat-label">نشطين اليوم</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="serversCount">0</div>
+                        <div class="stat-label">السيرفرات</div>
+                    </div>
+                </div>
+                
+                <div class="users-list" id="usersList">
+                    <div class="empty-state">
+                        <div class="empty-icon">👥</div>
+                        <p>لا توجد حسابات بعد</p>
+                        <p style="font-size: 14px; margin-top: 10px;">أنشئ حسابك الأول</p>
+                    </div>
+                </div>
+                
+                <button class="btn" style="background: rgba(138, 43, 226, 0.2); color: white; margin-top: 20px;" onclick="loadUsers()">
+                    <i class="fas fa-sync-alt"></i>
+                    تحديث القائمة
+                </button>
+            </div>
+        </div>
+        
+        <div class="admin-card" style="margin-top: 30px;">
+            <div class="card-title">
+                <i class="fas fa-chart-line"></i>
+                إحصائيات النظام
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalStorage">0 GB</div>
+                    <div class="stat-label">التخزين الكلي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="runningServers">0</div>
+                    <div class="stat-label">سيرفرات نشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayRegistrations">0</div>
+                    <div class="stat-label">مستخدمين جدد اليوم</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="systemUptime">0</div>
+                    <div class="stat-label">زمن التشغيل (ساعة)</div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        let currentAdmin = "";
+        
+        async function checkAdminAuth() {
+            try {
+                const response = await fetch('/api/current_user');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    window.location.href = '/login';
+                    return;
+                }
+                
+                if (!data.is_admin) {
+                    window.location.href = '/';
+                    return;
+                }
+                
+                currentAdmin = data.username;
+                document.getElementById('adminUsername').textContent = currentAdmin;
+                
+                loadUsers();
+                loadStats();
+                
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+        
+        function goToDashboard() {
+            window.location.href = '/';
+        }
+        
+        async function logout() {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/login';
+            }
+        }
+        
+        async function createNewUser() {
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            
+            if (!username || !password || !confirmPassword) {
+                showMessage('يرجى ملء جميع الحقول', 'error', 'createMessage');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error', 'createMessage');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('كلمة المرور غير متطابقة', 'error', 'createMessage');
+                return;
+            }
+            
+            const btn = document.getElementById('createUserBtn');
+            const text = document.getElementById('createUserText');
+            const loading = document.getElementById('createUserLoading');
+            
+            text.style.display = 'none';
+            loading.style.display = 'block';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/admin/create_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('✅ ' + data.message, 'success', 'createMessage');
+                    
+                    document.getElementById('newUsername').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmPassword').value = '';
+                    
+                    setTimeout(() => {
+                        loadUsers();
+                        loadStats();
+                    }, 1000);
+                } else {
+                    showMessage('❌ ' + data.message, 'error', 'createMessage');
+                }
+            } catch (error) {
+                showMessage('⚠️ خطأ في الاتصال بالخادم', 'error', 'createMessage');
+            } finally {
+                text.style.display = 'inline';
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+        
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/admin/users');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const usersList = document.getElementById('usersList');
+                    const usersCount = document.getElementById('usersCount');
+                    
+                    usersCount.textContent = data.users.length;
+                    
+                    if (data.users.length === 0) {
+                        usersList.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-icon">👥</div>
+                                <p>لا توجد حسابات بعد</p>
+                                <p style="font-size: 14px; margin-top: 10px;">أنشئ حسابك الأول</p>
+                            </div>
+                        `;
+                    } else {
+                        usersList.innerHTML = data.users.map(user => `
+                            <div class="user-item">
+                                <div class="user-info">
+                                    <div class="user-name">${user.username}</div>
+                                    <div class="user-details">
+                                        <div>الخطة: ${user.plan}</div>
+                                        <div>أنشئ في: ${new Date(user.created_at).toLocaleDateString('ar-SA')}</div>
+                                        <div>عدد السيرفرات: ${user.servers_count}</div>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="action-btn delete-btn" onclick="deleteUser('${user.username}')">
+                                        <i class="fas fa-trash"></i>
+                                        حذف
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                    
+                    document.getElementById('totalUsers').textContent = data.users.length;
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+        
+        async function loadStats() {
+            try {
+                const usersResponse = await fetch('/api/admin/users');
+                const usersData = await usersResponse.json();
+                
+                if (usersData.success) {
+                    let serversCount = 0;
+                    usersData.users.forEach(user => {
+                        serversCount += user.servers_count || 0;
+                    });
+                    
+                    document.getElementById('serversCount').textContent = serversCount;
+                    
+                    const today = new Date().toLocaleDateString('ar-SA');
+                    const todayUsers = usersData.users.filter(user => {
+                        const createdDate = new Date(user.created_at).toLocaleDateString('ar-SA');
+                        return createdDate === today;
+                    }).length;
+                    
+                    document.getElementById('todayRegistrations').textContent = todayUsers;
+                    
+                    const activeUsers = usersData.users.filter(user => {
+                        if (!user.last_login) return false;
+                        const lastLogin = new Date(user.last_login);
+                        const today = new Date();
+                        return lastLogin.toDateString() === today.toDateString();
+                    }).length;
+                    
+                    document.getElementById('activeUsers').textContent = activeUsers;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        async function deleteUser(username) {
+            if (!confirm(`⚠️ هل أنت متأكد من حذف المستخدم "${username}"؟\nهذا الإجراء لا يمكن التراجع عنه!`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/delete_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(`✅ تم حذف المستخدم "${username}" بنجاح`, 'success', 'createMessage');
+                    setTimeout(() => {
+                        loadUsers();
+                        loadStats();
+                    }, 1000);
+                } else {
+                    showMessage('❌ ' + data.message, 'error', 'createMessage');
+                }
+            } catch (error) {
+                showMessage('⚠️ خطأ في حذف المستخدم', 'error', 'createMessage');
+            }
+        }
+        
+        function showMessage(text, type, elementId = 'createMessage') {
+            const msgDiv = document.getElementById(elementId);
+            msgDiv.textContent = text;
+            msgDiv.className = `message ${type}`;
+            msgDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                msgDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                createNewUser();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAuth();
+            
+            setInterval(() => {
+                loadStats();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

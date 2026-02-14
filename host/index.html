@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlliFF Bot Manager - لوحة التحكم</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --gradient: linear-gradient(135deg, #00d4ff 0%, #0088ff 50%, #0066cc 100%);
+      --bg: #05060a;
+      --card-bg: rgba(12, 17, 29, 0.9);
+      --text: #ffffff;
+      --text-muted: #a0aec0;
+      --success: #00ff88;
+      --error: #ff5555;
+      --warning: #ffaa00;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid var(--primary);
+      flex-shrink: 0;
+      z-index: 1000;
+    }
+    
+    .logo {
+      font-size: 22px;
+      font-weight: 900;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 2px;
+    }
+    
+    .user-section { display: flex; align-items: center; gap: 20px; }
+    .user-info { text-align: right; }
+    .user-name { font-weight: 700; color: var(--primary); font-size: 14px; }
+    
+    .logout-btn {
+      background: transparent;
+      border: 2px solid var(--error);
+      color: var(--error);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s;
+      font-size: 12px;
+    }
+    
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 20px 30px;
+    }
+    
+    .page-title { font-size: 2rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; }
+    .page-subtitle { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; display: flex; gap: 20px; }
+    
+    .bots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; }
+    
+    .bot-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 2px solid rgba(0, 212, 255, 0.2);
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .bot-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2); }
+    
+    .bot-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px; }
+    .bot-title { font-size: 1.2rem; font-weight: 800; color: var(--primary); }
+    
+    .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .status-badge.running { background: rgba(0, 255, 136, 0.2); color: var(--success); border: 1px solid rgba(0, 255, 136, 0.4); }
+    .status-badge.stopped { background: rgba(255, 85, 85, 0.2); color: var(--error); border: 1px solid rgba(255, 85, 85, 0.4); }
+    
+    .btn { width: 100%; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; margin-top: 8px; font-size: 13px; }
+    .btn-primary { background: var(--gradient); color: #000; }
+    .btn-manage { background: rgba(0, 212, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+    .btn-manage:hover { background: var(--primary); color: #000; }
+    
+    .create-section { background: var(--card-bg); border-radius: 15px; padding: 20px; border: 2px solid rgba(0, 212, 255, 0.2); margin-bottom: 20px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 13px; font-weight: 600; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 2px solid rgba(0, 212, 255, 0.2); border-radius: 8px; color: #fff; font-family: 'Tajawal', sans-serif; font-size: 13px; }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; backdrop-filter: blur(10px); overflow-y: auto; }
+    .modal-content { width: 95%; max-width: 800px; max-height: 90vh; margin: 5vh auto; background: var(--card-bg); border-radius: 20px; border: 2px solid var(--primary); padding: 20px; overflow-y: auto; position: relative; }
+    @media (max-width: 600px) {
+      .topbar { padding: 10px 15px; }
+      .logo { font-size: 18px; }
+      .main-content { padding: 15px; }
+      .page-title { font-size: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+      .modal-content { width: 98%; padding: 15px; margin: 2vh auto; }
+      .tabs { gap: 5px; }
+      .tab { padding: 6px 10px; font-size: 12px; }
+      .btn { padding: 12px; font-size: 12px; }
+    }
+    
+    .close-btn { float: left; cursor: pointer; font-size: 1.5rem; color: var(--text-muted); }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(0, 212, 255, 0.2); padding-bottom: 10px; flex-wrap: wrap; }
+    .tab { padding: 8px 16px; cursor: pointer; border-radius: 8px; transition: 0.3s; font-size: 13px; font-weight: 600; }
+    .tab.active { background: var(--primary); color: #000; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .log-area { background: #000; color: #00ff00; font-family: monospace; padding: 12px; border-radius: 10px; height: 250px; overflow-y: auto; white-space: pre-wrap; font-size: 0.75rem; border: 1px solid rgba(0, 255, 136, 0.2); }
+    
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    
+    .section-title { color: var(--primary); font-weight: 800; margin-top: 15px; margin-bottom: 10px; font-size: 14px; }
+    
+    .required { color: var(--error); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🤖 AlliFF Bot Manager</div>
+    <div class="user-section">
+      <div class="user-info">
+        <div class="user-name" id="userName">مستخدم</div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);">لوحة التحكم</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </header>
+  
+  <div class="main-content">
+    <h1 class="page-title">🤖 إدارة البوتات</h1>
+    <p class="page-subtitle">
+      <span>البوتات المتاحة: <b id="maxBots">0</b></span>
+      <span>المنتهية في: <b id="expiryDate">-</b></span>
+    </p>
+    
+    <div class="create-section">
+      <h2 style="color: var(--primary); margin-bottom: 15px; font-size: 16px;">➕ إنشاء بوت جديد</h2>
+      <div class="form-group">
+        <label>🏷️ اسم البوت</label>
+        <input type="text" id="newBotName" placeholder="مثال: MyBot1">
+      </div>
+      <button class="btn btn-primary" onclick="createBot()">✨ إنشاء البوت الآن</button>
+      <div id="createMessage" style="margin-top: 10px; text-align: center; font-size: 13px;"></div>
+    </div>
+    
+    <div class="bots-grid" id="botsGrid">
+      <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--text-muted);">جاري تحميل البوتات...</div>
+    </div>
+  </div>
+
+  <!-- Management Modal -->
+  <div id="manageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">✖</span>
+      <h2 id="modalTitle" style="color: var(--primary); margin-bottom: 15px; font-size: 18px;">إدارة البوت</h2>
+      
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('settings')">⚙️ الإعدادات</div>
+        <div class="tab" onclick="showTab('messages')">💬 الرسائل</div>
+        <div class="tab" onclick="showTab('logs')">📋 السجلات</div>
+      </div>
+      
+      <!-- Settings Tab -->
+      <div id="settingsTab" class="tab-content active">
+        <div class="section-title">🔑 بيانات الحساب <span class="required">*</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>معرف الحساب (UID) <span class="required">*</span></label>
+            <input type="text" id="cfg_account_uid" placeholder="مثال: 4368786583" required>
+          </div>
+          <div class="form-group">
+            <label>كلمة مرور الحساب <span class="required">*</span></label>
+            <input type="password" id="cfg_account_password" placeholder="أدخل كلمة المرور" required>
+          </div>
+        </div>
+        
+        <div class="section-title">📋 معلومات البوت</div>
+        <div class="form-group">
+          <label>🤖 اسم البوت</label>
+          <input type="text" id="cfg_bot_name" placeholder="مثال: AlliFF BOT">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>👤 اسم المالك</label>
+            <input type="text" id="cfg_owner_name" placeholder="مثال: AlliFF">
+          </div>
+          <div class="form-group">
+            <label>📱 حساب التيليجرام</label>
+            <input type="text" id="cfg_owner_tg" placeholder="مثال: @AlliFF_BOT">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label>🔐 معرف الأدمن (UID)</label>
+          <input type="text" id="cfg_admin_uid" placeholder="معرف الأدمن">
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="saveConfig()" style="flex: 1; min-width: 150px;">💾 حفظ التعديلات</button>
+          <button id="startBtn" class="btn btn-manage" onclick="startBot()" style="flex: 1; min-width: 120px;">▶️ تشغيل</button>
+          <button id="stopBtn" class="btn btn-manage" style="border-color: var(--error); color: var(--error); flex: 1; min-width: 120px;" onclick="stopBot()">⏹️ إيقاف</button>
+        </div>
+      </div>
+      
+      <!-- Messages Tab -->
+      <div id="messagesTab" class="tab-content">
+        <div class="section-title">📜 رسائل البوت</div>
+        
+        <div class="form-group">
+          <label>رسالة المساعدة (الجزء الأول)</label>
+          <textarea id="msg_help_1" placeholder="أدخل رسالة المساعدة الأولى..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>رسالة المساعدة (الجزء الثاني)</label>
+          <textarea id="msg_help_2" placeholder="أدخل رسالة المساعدة الثانية..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>رسالة الأدمن</label>
+          <textarea id="msg_admin" placeholder="أدخل رسالة الأدمن..."></textarea>
+        </div>
+        
+        <button class="btn btn-primary" onclick="saveConfig()">💾 حفظ الرسائل</button>
+      </div>
+      
+      <!-- Logs Tab -->
+      <div id="logsTab" class="tab-content">
+        <div class="section-title">📋 سجلات البوت</div>
+        <div class="log-area" id="logArea">جاري تحميل السجلات...</div>
+        <button class="btn btn-manage" onclick="loadLogs()" style="margin-top: 10px;">🔄 تحديث السجلات</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentBotFolder = '';
+
+    async function loadUserInfo() {
+      const res = await fetch('/api/user/info');
+      const data = await res.json();
+      document.getElementById('userName').textContent = data.username;
+      document.getElementById('maxBots').textContent = data.max_bots;
+      document.getElementById('expiryDate').textContent = data.expires_at ? new Date(data.expires_at).toLocaleDateString('ar-EG') : 'غير محدود';
+    }
+
+    async function loadBots() {
+      const res = await fetch('/api/bots/list');
+      const bots = await res.json();
+      const grid = document.getElementById('botsGrid');
+      
+      if (bots.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">لا يوجد بوتات حالياً. قم بإنشاء أول بوت لك!</div>';
+        return;
+      }
+      
+      grid.innerHTML = '';
+      bots.forEach(bot => {
+        const card = document.createElement('div');
+        card.className = 'bot-card';
+        card.innerHTML = `
+          <div class="bot-header">
+            <div class="bot-title">${bot.title}</div>
+            <span class="status-badge ${bot.status}">${bot.status === 'running' ? '✅ يعمل' : '⏹️ متوقف'}</span>
+          </div>
+          <button class="btn btn-manage" onclick="openManage('${bot.folder}', '${bot.title}')">⚙️ إدارة</button>
+          <button class="btn btn-manage" style="border-color: var(--error); color: var(--error);" onclick="deleteBot('${bot.folder}')">🗑️ حذف</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    async function createBot() {
+      const name = document.getElementById('newBotName').value;
+      if (!name) return alert('يرجى إدخال اسم للبوت');
+      
+      const res = await fetch('/api/bots/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('newBotName').value = '';
+        loadBots();
+        alert('تم إنشاء البوت بنجاح!');
+      } else alert('خطأ: ' + data.message);
+    }
+
+    async function openManage(folder, title) {
+      currentBotFolder = folder;
+      document.getElementById('modalTitle').textContent = 'إدارة: ' + title;
+      document.getElementById('manageModal').style.display = 'block';
+      
+      const res = await fetch(`/api/bots/config/get/${folder}`);
+      const cfg = await res.json();
+      
+      document.getElementById('cfg_account_uid').value = cfg.account_uid || '';
+      document.getElementById('cfg_account_password').value = cfg.account_password || '';
+      document.getElementById('cfg_bot_name').value = cfg.bot_name || '';
+      document.getElementById('cfg_owner_name').value = cfg.owner_name || '';
+      document.getElementById('cfg_owner_tg').value = cfg.owner_telegram || '';
+      document.getElementById('cfg_admin_uid').value = cfg.admin_uid || '';
+      
+      document.getElementById('msg_help_1').value = cfg.messages?.help_msg_1 || '';
+      document.getElementById('msg_help_2').value = cfg.messages?.help_msg_2 || '';
+      document.getElementById('msg_admin').value = cfg.messages?.admin_msg || '';
+      
+      showTab('settings');
+      startLogAutoUpdate();
+    }
+
+    async function saveConfig() {
+      const uid = document.getElementById('cfg_account_uid').value.trim();
+      const pwd = document.getElementById('cfg_account_password').value.trim();
+      
+      if (!uid || !pwd) {
+        alert('⚠️ معرف الحساب وكلمة المرور مطلوبة!');
+        return;
+      }
+      
+      const config = {
+        account_uid: uid,
+        account_password: pwd,
+        bot_name: document.getElementById('cfg_bot_name').value,
+        owner_name: document.getElementById('cfg_owner_name').value,
+        owner_telegram: document.getElementById('cfg_owner_tg').value,
+        admin_uid: document.getElementById('cfg_admin_uid').value,
+        messages: {
+          help_msg_1: document.getElementById('msg_help_1').value,
+          help_msg_2: document.getElementById('msg_help_2').value,
+          admin_msg: document.getElementById('msg_admin').value
+        }
+      };
+      
+      const res = await fetch(`/api/bots/config/save/${currentBotFolder}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+      
+      if ((await res.json()).success) {
+        alert('✅ تم حفظ الإعدادات بنجاح!');
+      } else alert('❌ حدث خطأ في الحفظ');
+    }
+
+    let logInterval = null;
+
+    async function startBot() {
+      const res = await fetch('/api/bots/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folder: currentBotFolder })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('✅ ' + data.message);
+        loadBots();
+        showTab('logs');
+        startLogAutoUpdate();
+      } else alert('❌ ' + data.message);
+    }
+
+    function startLogAutoUpdate() {
+      if (logInterval) clearInterval(logInterval);
+      loadLogs();
+      logInterval = setInterval(() => {
+        if (document.getElementById('logsTab').classList.contains('active')) {
+          loadLogs();
+        }
+      }, 2000);
+    }
+
+    async function stopBot() {
+      const res = await fetch('/api/bots/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folder: currentBotFolder })
+      });
+      if ((await res.json()).success) {
+        alert('✅ تم إيقاف البوت!');
+        loadBots();
+      }
+    }
+
+    async function deleteBot(folder) {
+      if (!confirm('هل أنت متأكد من حذف هذا البوت؟')) return;
+      
+      const res = await fetch('/api/bots/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ folder })
+      });
+      
+      if ((await res.json()).success) {
+        alert('✅ تم حذف البوت!');
+        loadBots();
+        closeModal();
+      }
+    }
+
+    async function loadLogs() {
+      if (!currentBotFolder) return;
+      const res = await fetch(`/api/bots/logs/${currentBotFolder}`);
+      const data = await res.json();
+      const logArea = document.getElementById('logArea');
+      const isScrolledToBottom = logArea.scrollHeight - logArea.clientHeight <= logArea.scrollTop + 1;
+      
+      logArea.textContent = data.logs || 'لا يوجد سجلات حالياً';
+      
+      if (isScrolledToBottom) {
+        logArea.scrollTop = logArea.scrollHeight;
+      }
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabId + 'Tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('manageModal').style.display = 'none';
+      currentBotFolder = '';
+      if (logInterval) {
+        clearInterval(logInterval);
+        logInterval = null;
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/logout');
+      window.location.href = '/login';
+    }
+
+    loadUserInfo();
+    loadBots();
+    setInterval(loadBots, 5000);
+  </script>
+</body>
+</html>

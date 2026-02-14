@@ -1,0 +1,75 @@
+{
+  "users": {
+    "admin": {
+      "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "created_at": "2026-01-23T18:53:08.370692",
+      "last_login": "2026-01-23T19:04:54.429581",
+      "role": "super_admin",
+      "disk_quota": 10737418240,
+      "used_disk": 0,
+      "max_servers": 10,
+      "active_servers": 0,
+      "theme": "purple_elite"
+    }
+  },
+  "servers": [],
+  "files": [],
+  "logs": [
+    {
+      "timestamp": "2026-01-23T18:54:28.430370",
+      "username": "admin",
+      "action": "login",
+      "details": "\u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0646\u0627\u062c\u062d",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T18:55:54.377275",
+      "username": "admin",
+      "action": "logout",
+      "details": "\u062a\u0633\u062c\u064a\u0644 \u062e\u0631\u0648\u062c",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T18:56:45.991262",
+      "username": "alliff",
+      "action": "login_failed",
+      "details": "\u0645\u062d\u0627\u0648\u0644\u0629 \u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0641\u0627\u0634\u0644\u0629",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T19:03:41.864789",
+      "username": "admin",
+      "action": "login_failed",
+      "details": "\u0645\u062d\u0627\u0648\u0644\u0629 \u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0641\u0627\u0634\u0644\u0629",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T19:04:43.031347",
+      "username": "admin",
+      "action": "login_failed",
+      "details": "\u0645\u062d\u0627\u0648\u0644\u0629 \u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0641\u0627\u0634\u0644\u0629",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T19:04:54.429846",
+      "username": "admin",
+      "action": "login",
+      "details": "\u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0646\u0627\u062c\u062d",
+      "ip": "196.187.135.241"
+    },
+    {
+      "timestamp": "2026-01-23T19:11:13.828925",
+      "username": "hamza",
+      "action": "login_failed",
+      "details": "\u0645\u062d\u0627\u0648\u0644\u0629 \u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0641\u0627\u0634\u0644\u0629",
+      "ip": "197.55.211.81"
+    },
+    {
+      "timestamp": "2026-01-23T19:11:25.102872",
+      "username": "hamza",
+      "action": "login_failed",
+      "details": "\u0645\u062d\u0627\u0648\u0644\u0629 \u062a\u0633\u062c\u064a\u0644 \u062f\u062e\u0648\u0644 \u0641\u0627\u0634\u0644\u0629",
+      "ip": "197.55.211.81"
+    }
+  ]
+}

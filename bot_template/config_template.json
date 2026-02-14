@@ -1,0 +1,25 @@
+{
+  "bot_name": "AlliFF BOT",
+  "owner_name": "AlliFF",
+  "owner_telegram": "@AlliFF_BOT",
+  "support_telegram": "@AlliFF_BOT_V1",
+  "account_uid": "",
+  "account_password": "",
+  "admin_uid": "760840390",
+  "messages": {
+    "help_msg_1": "[C][B][ADD8E6]═══AlliFF BOT |\n[E0FFFF]⚡ For emote without bot\n[AFEEEE]⚡ /emote [team_code] [emote_number] [uid1] [uid2] [uid3] [uid4]\n\n[E0FFFF]⚡ Send likes to player\n[AFEEEE]⚡ /like [uid]\n\n[E0FFFF]⚡ Create 5 player squad\n[AFEEEE]⚡ /5\n\n[E0FFFF]⚡ Create 6 player squad\n[AFEEEE]⚡ /6\n\n[E0FFFF]⚡ Create 3 player squad\n[AFEEEE]⚡ /3\n\n[E0FFFF]⚡ Intensive attack (45 seconds)\n[AFEEEE]⚡ /attack [team_code]\n\n[E0FFFF]⚡ Stop attack\n[AFEEEE]⚡ /stop_attack\n\n[AFEEEE]━━━━━━━━━━━━[E0FFFF]",
+    "help_msg_2": "[C][B][FFD700] AlliFF BOT | [FFFF00][B]\n\n[FFFF00]⚡ Return bot to solo\n[00FFFF]⚡ /solo\n\n[FFFF00]⚡ Know who is admin\n[00FFFF]⚡ /Admin\n\n[FFFF00]⚡ Room invites spam\n[00FFFF]⚡ /mk [id]\n\n[FFFF00]⚡ Stop room spam\n[00FFFF]⚡ /stop_mk [id]\n\n[FFFF00]⚡ Send ghosts to team\n[00FFFF]⚡ /ghost [team_code] [name]\n\n[FFFF00]⚡ Lag attack on team\n[00FFFF]⚡ /lag_ghost [team_code] [name]\n\n[FFFF00]⚡ Messages in team\n[00FFFF]⚡ /msg [team_code] [message]\n\n[FFFF00]⚡ Squad spam\n[00FFFF]⚡ /spam [id]\n\n[FFFF00]⚡ Stop spam\n[00FFFF]⚡ /stop_spam [id]",
+    "admin_msg": "[C][B][FF0000]╔══════════╗\n[FFFFFF]✨ folow on Telegram    \n[FFFFFF]          ⚡ @AlliFF_BOT_V1\n[FFFFFF]                   thank for support \n[FF0000]╠══════════╣\n[FFD700]⚡ OWNER : [FFFFFF]{owner_name}    \n[FFD700]✨ Name on Telegram   : [FFFFFF]{owner_telegram}  \n[FF0000]╚══════════╝\n[FFD700]✨ Developer —͟͞͞ </> AlliFF ⚡",
+    "online_msg": "[B][C]{color}\n🎯 {bot_name} Online!\n[B][C][00FF00]Commands: Use /help"
+  },
+  "commands": {
+    "help": "/help",
+    "admin": "/admin",
+    "stop": "/stop",
+    "like": "/like",
+    "attack": "/attack",
+    "mk": "/mk",
+    "spam": "/spam"
+  },
+  "status": "stopped"
+}

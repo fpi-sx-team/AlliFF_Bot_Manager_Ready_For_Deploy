@@ -1,0 +1,13 @@
+{
+  "account_uid": "4378086888",
+  "account_password": "AllFF_VIPSQOTTNGAL",
+  "bot_name": "Aaaa",
+  "owner_name": "Aaaaaa",
+  "owner_telegram": "@Alli",
+  "admin_uid": "760840390",
+  "messages": {
+    "help_msg_1": "[C][B][ADD8E6]\u2550\u2550\u2550AlliFF BOT |\n[E0FFFF]\u26a1 For emote without bot\n[AFEEEE]\u26a1 /emote [team_code] [emote_number] [uid1] [uid2] [uid3] [uid4]\n\n[E0FFFF]\u26a1 Send likes to player\n[AFEEEE]\u26a1 /like [uid]\n\n[E0FFFF]\u26a1 Create 5 player squad\n[AFEEEE]\u26a1 /5\n\n[E0FFFF]\u26a1 Create 6 player squad\n[AFEEEE]\u26a1 /6\n\n[E0FFFF]\u26a1 Create 3 player squad\n[AFEEEE]\u26a1 /3\n\n[E0FFFF]\u26a1 Intensive attack (45 seconds)\n[AFEEEE]\u26a1 /attack [team_code]\n\n[E0FFFF]\u26a1 Stop attack\n[AFEEEE]\u26a1 /stop_attack\n\n[AFEEEE]\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501[E0FFFF]",
+    "help_msg_2": "[C][B][FFD700] AlliFF BOT | [FFFF00][B]\n\n[FFFF00]\u26a1 Return bot to solo\n[00FFFF]\u26a1 /solo\n\n[FFFF00]\u26a1 Know who is admin\n[00FFFF]\u26a1 /Admin\n\n[FFFF00]\u26a1 Room invites spam\n[00FFFF]\u26a1 /mk [id]\n\n[FFFF00]\u26a1 Stop room spam\n[00FFFF]\u26a1 /stop_mk [id]\n\n[FFFF00]\u26a1 Send ghosts to team\n[00FFFF]\u26a1 /ghost [team_code] [name]\n\n[FFFF00]\u26a1 Lag attack on team\n[00FFFF]\u26a1 /lag_ghost [team_code] [name]\n\n[FFFF00]\u26a1 Messages in team\n[00FFFF]\u26a1 /msg [team_code] [message]\n\n[FFFF00]\u26a1 Squad spam\n[00FFFF]\u26a1 /spam [id]\n\n[FFFF00]\u26a1 Stop spam\n[00FFFF]\u26a1 /stop_spam [id]",
+    "admin_msg": "[C][B][FF0000]\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n[FFFFFF]\u2728 folow on Telegram    \n[FFFFFF]         AlliFF\n[FFFFFF]                   thank for support \n[FF0000]\u2560\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2563\n[FFD700]\u26a1 OWNER : [FFFFFF]{owner_name}    \n[FFD700]\u2728 Name on Telegram   : [FFFFFF]{owner_telegram}  \n[FF0000]\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d"
+  }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlliFF Bot Manager - إدارة الملفات</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --gradient: linear-gradient(135deg, #00d4ff 0%, #0088ff 50%, #0066cc 100%);
+      --bg: #05060a;
+      --card-bg: rgba(12, 17, 29, 0.9);
+      --text: #ffffff;
+      --text-muted: #a0aec0;
+      --success: #00ff88;
+      --error: #ff5555;
+      --warning: #ffaa00;
+    }
+    
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 30px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 3px solid var(--primary);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    
+    .logo { font-size: 24px; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    
+    .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+    
+    .manage-card { background: var(--card-bg); border-radius: 15px; padding: 25px; border: 2px solid rgba(0, 212, 255, 0.2); }
+    
+    .manage-card-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+    
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: 'Tajawal', sans-serif; text-decoration: none; display: inline-block; text-align: center; }
+    
+    .btn-primary { background: var(--gradient); color: #000; }
+    .btn-back { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); }
+    .btn-manage { background: rgba(0, 212, 255, 0.1); color: var(--primary); border: 1px solid var(--primary); }
+    .btn-danger { background: rgba(255, 85, 85, 0.1); color: var(--error); border: 1px solid var(--error); }
+    .btn-warning { background: rgba(255, 170, 0, 0.1); color: var(--warning); border: 1px solid var(--warning); }
+    
+    .file-list { background: rgba(0, 0, 0, 0.3); border-radius: 10px; margin-top: 20px; overflow: hidden; }
+    
+    .file-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .file-item:hover { background: rgba(0, 212, 255, 0.05); }
+    
+    .upload-section { margin-bottom: 20px; padding: 20px; background: rgba(0, 212, 255, 0.05); border-radius: 10px; border: 1px dashed var(--primary); text-align: center; }
+    
+    .selected-files { margin-top: 10px; text-align: right; font-size: 0.9rem; color: var(--text-muted); }
+
+    .editor-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; padding: 20px; }
+    .editor-area { width: 100%; height: calc(100% - 100px); background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; border-radius: 10px; border: 1px solid var(--primary); margin-bottom: 15px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">🚀 AlliFF Bot Manager - الملفات</div>
+    <a href="/" class="btn btn-back">⬅️ رجوع للوحة التحكم</a>
+  </header>
+
+  <div class="container">
+    <div class="manage-card">
+      <div class="manage-card-title">
+        <span id="folderTitle">جاري التحميل...</span>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-danger" onclick="deleteAllFiles()">🗑️ حذف الكل</button>
+          <button class="btn btn-primary" onclick="newFile()">📄 ملف جديد</button>
+        </div>
+      </div>
+
+      <div class="upload-section">
+        <p style="margin-bottom: 10px; color: var(--primary);">اختر الملفات التي تريد رفعها</p>
+        <input type="file" id="fileUpload" multiple style="display: none;" onchange="updateFileList()">
+        <button class="btn btn-manage" onclick="document.getElementById('fileUpload').click()">📁 اختيار ملفات</button>
+        <button class="btn btn-primary" id="uploadBtn" style="display: none;" onclick="uploadFiles()">📤 بدء الرفع</button>
+        <div id="selectedFilesList" class="selected-files"></div>
+      </div>
+
+      <div id="fileList" class="file-list"></div>
+    </div>
+  </div>
+
+  <div id="editorContainer" class="editor-container">
+    <h3 id="editingFileName" style="margin-bottom: 15px; color: var(--primary);"></h3>
+    <textarea id="fileEditor" class="editor-area"></textarea>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-primary" onclick="saveFile()">💾 حفظ</button>
+      <button class="btn btn-back" onclick="closeEditor()">❌ إغلاق</button>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const folder = urlParams.get('folder');
+    if (!folder) window.location.href = '/';
+
+    document.getElementById('folderTitle').textContent = `📁 ملفات السيرفر: ${folder}`;
+
+    async function loadFiles() {
+      const res = await fetch(`/api/files/list/${folder}`);
+      const files = await res.json();
+      const list = document.getElementById('fileList');
+      if (files.length === 0) {
+        list.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">لا توجد ملفات.</div>';
+        return;
+      }
+      list.innerHTML = files.map(f => `
+        <div class="file-item">
+          <span>${f.is_dir ? '📁' : '📄'} ${f.name} <small style="color: var(--text-muted); margin-right: 10px;">${f.is_dir ? '' : (f.size / 1024).toFixed(2) + ' KB'}</small></span>
+          <div style="display: flex; gap: 10px;">
+            ${!f.is_dir ? `<button class="btn btn-manage" style="padding: 5px 10px; font-size: 0.8rem;" onclick="editFile('${f.name}')">📝 تحرير</button>` : ''}
+            <button class="btn btn-warning" style="padding: 5px 10px; font-size: 0.8rem;" onclick="renameFile('${f.name}')">✏️ تسمية</button>
+            <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem;" onclick="deleteFile('${f.name}')">🗑️ حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateFileList() {
+      const input = document.getElementById('fileUpload');
+      const list = document.getElementById('selectedFilesList');
+      const btn = document.getElementById('uploadBtn');
+      if (input.files.length > 0) {
+        list.textContent = `تم اختيار ${input.files.length} ملفات`;
+        btn.style.display = 'inline-block';
+      } else {
+        list.textContent = '';
+        btn.style.display = 'none';
+      }
+    }
+
+    async function uploadFiles() {
+      const input = document.getElementById('fileUpload');
+      if (input.files.length === 0) return;
+      const formData = new FormData();
+      for (let i = 0; i < input.files.length; i++) {
+        formData.append('file', input.files[i]);
+      }
+      const res = await fetch(`/api/files/upload/${folder}`, { method: 'POST', body: formData });
+      if ((await res.json()).success) {
+        input.value = '';
+        updateFileList();
+        loadFiles();
+      }
+    }
+
+    async function renameFile(oldName) {
+      const newName = prompt('الاسم الجديد:', oldName);
+      if (newName && newName !== oldName) {
+        const res = await fetch(`/api/files/rename/${folder}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ old_name: oldName, new_name: newName })
+        });
+        if ((await res.json()).success) loadFiles();
+      }
+    }
+
+    async function deleteAllFiles() {
+      if (!confirm('هل أنت متأكد من حذف جميع الملفات؟ لا يمكن التراجع!')) return;
+      const res = await fetch(`/api/files/delete_all/${folder}`, { method: 'POST' });
+      if ((await res.json()).success) loadFiles();
+    }
+
+    async function deleteFile(filename) {
+      if (!confirm(`حذف ${filename}؟`)) return;
+      const res = await fetch(`/api/files/delete/${folder}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename })
+      });
+      if ((await res.json()).success) loadFiles();
+    }
+
+    async function editFile(name) {
+      const res = await fetch(`/api/files/read/${folder}/${name}`);
+      const data = await res.json();
+      document.getElementById('editingFileName').textContent = 'تحرير: ' + name;
+      document.getElementById('fileEditor').value = data.content;
+      document.getElementById('editorContainer').style.display = 'block';
+    }
+
+    async function saveFile() {
+      const filename = document.getElementById('editingFileName').textContent.replace('تحرير: ', '');
+      const content = document.getElementById('fileEditor').value;
+      const res = await fetch(`/api/files/save/${folder}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, content })
+      });
+      if ((await res.json()).success) { closeEditor(); loadFiles(); }
+    }
+
+    function closeEditor() { document.getElementById('editorContainer').style.display = 'none'; }
+    function newFile() { const name = prompt('اسم الملف الجديد:'); if (name) editFile(name); }
+
+    loadFiles();
+  </script>
+</body>
+</html>

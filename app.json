@@ -1,0 +1,23 @@
+{
+  "name": "AlliFF Bot Manager",
+  "description": "نظام استضافة متخصص لبوتات التليجرام مع لوحة تحكم احترافية",
+  "repository": "https://github.com/YOUR_USERNAME/alliff-bot-manager",
+  "keywords": ["python", "flask", "telegram", "bot", "manager"],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "env": {
+    "PORT": {
+      "description": "Port number for the Flask application",
+      "value": "21047"
+    }
+  }
+}
